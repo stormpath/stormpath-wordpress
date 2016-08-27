@@ -1,0 +1,15 @@
+{
+    "name": "stormpath/wordpress",
+    "description": "Allow the use of users from Stormpath to login into your WordPress site.  Creates a user in stormpath if they only exist on WordPress.",
+    "type": "library",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Brian Retterer",
+            "email": "brian@stormpath.com"
+        }
+    ],
+    "require": {
+        "stevegrunwell/wp-enforcer": "^0.4.1"
+    }
+}
