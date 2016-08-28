@@ -40,3 +40,4 @@ function autoload( $className ) {
 		require_once $file;
 	}
 }
+spl_autoload_register( __NAMESPACE__ . 'autoload' );
