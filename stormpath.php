@@ -14,3 +14,4 @@
 
 define( 'STORMPATH_INTEGRATION',    'stormpath-wordpress' );
 define( 'STORMPATH_VERSION',        '0.0.0-alpha' );
+
