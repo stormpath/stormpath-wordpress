@@ -6,15 +6,17 @@
  * Version: 0.0.0-alpha
  * Author: Stormpath
  * Author URI: https://stormpath.com
- * Text Domain: stormpath
+ * Text Domain: stormpath-wordpress
  * Domain Path: /languages
  *
- * @package  Stormpath
+ * @package  Stormpath-WordPress
  */
 
-namespace Stormpath;
+namespace Stormpath\WordPress;
 
 define( 'STORMPATH_INTEGRATION',    'stormpath-wordpress' );
 define( 'STORMPATH_VERSION',        '0.0.0-alpha' );
 
+
 require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/admin.php';
