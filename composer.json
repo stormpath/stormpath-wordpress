@@ -9,7 +9,7 @@
             "email": "brian@stormpath.com"
         }
     ],
-    "require": {
+    "require-dev": {
         "stevegrunwell/wp-enforcer": "^0.4.1"
     }
 }
