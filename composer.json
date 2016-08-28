@@ -10,7 +10,9 @@
         }
     ],
     "require-dev": {
-        "stevegrunwell/wp-enforcer": "^0.4.1"
+        "stevegrunwell/wp-enforcer": "^0.4.1",
+        "phpunit/phpunit": "^5.5",
+        "10up/wp_mock": "^0.1.1"
     },
     "post-install-cmd": [
         "wp-enforcer"
