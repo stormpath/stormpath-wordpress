@@ -41,10 +41,17 @@ the raw ID and Secret.
 
 == Changelog ==
 
+= 0.1.1 =
+* Current users will be created in Stormpath at next login
+* Masked login errors to prevent easier attempts
+
 = 0.1.0 =
 * Initial Release
 
 == Upgrade Notice ==
+
+= 0.1.1 =
+More robust error handling on accounts not existing in Stormpath.
 
 = 0.1.0 =
 This version is the initial release and should be added to your site immediately.
