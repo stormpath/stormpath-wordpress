@@ -49,6 +49,13 @@ class Stormpath {
 	private $client;
 
 	/**
+	 * The Stormpath Applicaiton.
+	 *
+	 * @var \Stormpath\Resource\Application
+	 */
+	private $application;
+
+	/**
 	 * The Authenticate Class
 	 *
 	 * @var Authenticate
@@ -66,7 +73,14 @@ class Stormpath {
 		$this->add_hooks();
 
 		$this->client = $this->create_client();
-		$this->replace_auth();
+
+		if ( $this->client ) {
+			$this->application = $this->application();
+		}
+
+		if ( $this->application ) {
+			$this->replace_auth();
+		}
 
 	}
 
@@ -91,16 +105,52 @@ class Stormpath {
 	 */
 	public function replace_auth() {
 		if ( null !== $this->client ) {
-			$application = $this->application();
-			$this->authenticate = new Authenticate( $application, $this->client );
+
+			$this->authenticate = new Authenticate( $this->application, $this->client );
 
 			add_action( 'user_register', [ $this->authenticate, 'user_registered' ], 10, 1 );
 			add_action( 'profile_update', [ $this->authenticate, 'profile_update' ], 10, 2 );
 			add_action( 'after_password_reset', [ $this->authenticate, 'password_changed' ], 10, 2 );
 			add_filter( 'authenticate', [ $this->authenticate, 'authenticate' ], 10, 3 );
+			add_filter( 'login_errors', [ $this, 'login_errors' ], 10, 1 );
 		} else {
 			do_action( 'stormpath_admin_error', 'could_not_contact_stormpath' );
 		}
+	}
+
+	/**
+	 * Override the login errors.
+	 *
+	 * @param \WP_Error $errors The wp_error object.
+	 * @return string
+	 */
+	public function login_errors( $errors ) {
+		global $errors;
+		$err_codes = $errors->get_error_codes();
+
+		$error = $errors->get_error_message();
+
+		if ( in_array( 'invalid_username', $err_codes ) ) {
+			$error = '<strong>ERROR</strong>: Invalid username or password.';
+		}
+
+		if ( in_array( 'invalid_email', $err_codes ) ) {
+			$error = '<strong>ERROR</strong>: Invalid username or password.';
+		}
+
+		if ( in_array( 'incorrect_password', $err_codes ) ) {
+			$error = '<strong>ERROR</strong>: Invalid username or password.';
+		}
+
+		if ( in_array( 'authentication_failed', $err_codes ) ) {
+			$error = '<strong>ERROR</strong>: Invalid username or password.';
+		}
+
+		if ( in_array( 'stormpath_error', $err_codes ) ) {
+			$error = '<strong>ERROR</strong>: There was an error logging you in. Please let the administrator know you received a ' . $errors->get_error_data()['code'] . ' code during login.';
+		}
+
+		return $error;
 	}
 
 	/**

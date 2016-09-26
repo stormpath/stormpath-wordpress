@@ -87,5 +87,6 @@ class Settings {
 		register_setting( 'stormpath_options', 'stormpath_client_apikey_properties' );
 		register_setting( 'stormpath_options', 'stormpath_client_apikey_id' );
 		register_setting( 'stormpath_options', 'stormpath_client_apikey_secret' );
+		register_setting( 'stormpath_options', 'stormpath_application' );
 	}
 }

@@ -47,9 +47,20 @@ if ( ! isset( $instance ) ) {
 					<p class="description">This will be stored in plain text in the database.</p>
 				</td>
 			</tr>
+
+			<tr valign="top">
+				<th scope="row">Application Href</th>
+				<td>
+					<input type="text" name="stormpath_application" class="regular-text" value="<?php echo esc_attr( get_option( 'stormpath_application' ) ); ?>" />
+					<p class="description">The full Application Href</p>
+				</td>
+			</tr>
 		</table>
 
 		<?php submit_button( 'Update Options' ); ?>
 	</form>
+
+
+
 </div>
 

@@ -34,4 +34,3 @@ function init() {
 }
 
 add_action( 'init', __NAMESPACE__ . '\init' );
-

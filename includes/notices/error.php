@@ -86,4 +86,14 @@ class Error extends Notices
 	protected function could_not_contact_stormpath() {
 		$this->message = 'We could not communicate with Stormpath, Please confirm your Api Key\'s are correct.';
 	}
+
+	/**
+	 * Display general error.
+	 *
+	 * @param string $message The message for the general error.
+	 * @return void
+	 */
+	protected function general( $message ) {
+	    $this->message = 'There was an error with Stormpath: ' . $message;
+	}
 }

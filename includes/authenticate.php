@@ -58,7 +58,7 @@ class Authenticate
 	 * @param Application       $application The Stormpath Application.
 	 * @param \Stormpath\Client $client      The Stormpath Client.
 	 */
-	public function __construct( Application $application, \Stormpath\Client $client ) {
+	public function __construct( $application, \Stormpath\Client $client ) {
 		$this->spClient = $client;
 		$this->spApplication = $application;
 
@@ -98,10 +98,24 @@ class Authenticate
 			$password
 		);
 
+		$account = null;
+
 		try {
 			$account = $this->spApplication->authenticateAccount( $authenticationRequest )->account;
 		} catch (\Exception $e) {
-			return false;
+		    if ( 7104 === $e->getCode() ) {
+				$account = $this->attempt_normal_login( $username, $password );
+			} else {
+				return false;
+			}
+		}
+
+		if ( $account instanceof WP_Error ) {
+		    return $account;
+		}
+
+		if ( ! $account instanceof \Stormpath\Resource\Account ) {
+		    return false;
 		}
 
 		$wpUser = $this->get_wp_user( $account );
@@ -112,6 +126,29 @@ class Authenticate
 
 		return $this->login_wp_user( $wpUser );
 
+	}
+
+	/**
+	 * Attempt a normal login with WordPress core function.
+	 *
+	 * @param string $username The username of login attempt.
+	 * @param string $password The password of the login attempt.
+	 * @return boolean|\Stormpath\Resource\Account
+	 */
+	private function attempt_normal_login( $username, $password ) {
+		$user = get_user_by( 'login', $username );
+
+		if ( $user && wp_check_password( $password, $user->data->user_pass, $user->ID ) ) {
+			return $this->register_stormpath_user( $user, $password );
+		}
+
+		$user = get_user_by( 'email', $username );
+
+		if ( $user && wp_check_password( $password, $user->data->user_pass, $user->ID ) ) {
+			return $this->register_stormpath_user( $user, $password );
+		}
+
+		return false;
 	}
 
 	/**
@@ -188,6 +225,31 @@ class Authenticate
 	}
 
 	/**
+	 * Register a user from a valid WP_User.
+	 *
+	 * @param WP_User $wpUser   The user being registered.
+	 * @param string  $password The password for the user.
+	 * @return Account|WP_Error|boolean
+	 */
+	public function register_stormpath_user( WP_User $wpUser, $password ) {
+	    try {
+			$account = new \stdClass();
+			$account->email = $wpUser->user_email;
+			$account->password = $password;
+			$account->givenName = $wpUser->user_firstname ?: 'Temp FirstName';
+			$account->surname = $wpUser->user_lastname ?: 'Temp LastName';
+			$account->username = $wpUser->user_login;
+
+			$accountObj = $this->spClient->getDataStore()->instantiate( Account::class, $account );
+
+			return $this->spApplication->createAccount( $accountObj );
+
+		} catch (\Exception $e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Hook callback for when a profile was updated.
 	 *
 	 * @param int    $userId  Id of User.
@@ -220,11 +282,15 @@ class Authenticate
 	 */
 	public function password_changed( $user, $password ) {
 		$accounts = $this->spApplication->accounts->setSearch( [ 'q' => $user->user_email ] );
-		$account = $accounts->getIterator()->current();
-		$account->password = $password;
-		$account->save();
+		if ( $accounts->size > 0 ) {
 
-		$id = $user->ID;
-		wp_set_password( wp_hash_password( wp_generate_password( 32 ) ), $id );
+			$account = $accounts->getIterator()->current();
+
+			$account->password = $password;
+			$account->save();
+
+			$id = $user->ID;
+			wp_set_password( wp_hash_password( wp_generate_password( 32 ) ), $id );
+		}
 	}
 }
