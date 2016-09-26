@@ -2,7 +2,7 @@
 /**
  * Stormpath WordPress Plugin Bootstrapper.
  *
- * @package Stormpath-WordPress
+ * @package Stormpath\WordPress
  */
 
 namespace Stormpath\WordPress;
@@ -25,3 +25,4 @@ function autoload( $className ) {
 	}
 }
 spl_autoload_register( __NAMESPACE__ . '\autoload' );
+

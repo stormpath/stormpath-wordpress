@@ -56,6 +56,8 @@
 		<severity>0</severity>
 	</rule>
 
-	<rule ref="WordPress-VIP" />
+	<rule ref="WordPress-VIP">
+		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
+	</rule>
 	<rule ref="WordPress-Docs" />
 </ruleset>

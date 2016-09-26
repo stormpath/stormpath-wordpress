@@ -2,8 +2,16 @@
 /**
  * Bootstrap the test suite.
  *
- * @package Stormpath-WordPress
+ * @package Stormpath\WordPress
  */
+
+if ( ! defined( 'PROJECT' ) ) {
+    define( 'PROJECT', __DIR__ . '/../includes/' );
+}
+
+if ( ! defined( 'ABSPATH' ) ) {
+    define( 'ABSPATH', __DIR__ . '/' );
+}
 
 if ( ! file_exists( __DIR__ . '/../vendor/autoload.php' ) ) {
     throw new PHPUnit_Framework_Exception(
@@ -11,6 +19,7 @@ if ( ! file_exists( __DIR__ . '/../vendor/autoload.php' ) ) {
     );
 }
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/TestCase.php';
 
 WP_Mock::setUsePatchwork( true );
 WP_Mock::bootstrap();

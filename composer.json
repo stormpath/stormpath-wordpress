@@ -15,9 +15,13 @@
         "10up/wp_mock": "^0.1.1"
     },
     "post-install-cmd": [
-        "wp-enforcer"
+        "wp-enforcer --vip"
     ],
     "post-update-cmd": [
-        "wp-enforcer"
-    ]
+        "wp-enforcer --vip"
+    ],
+    "require": {
+        "symfony/yaml": "^3.1",
+        "stormpath/sdk": "^1.0"
+    }
 }
