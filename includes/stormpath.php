@@ -64,8 +64,6 @@ class Stormpath {
 
 	/**
 	 * Stormpath constructor.
-	 *
-	 * @return void
 	 */
 	public function __construct() {
 		$this->settings     = new Settings( $this );

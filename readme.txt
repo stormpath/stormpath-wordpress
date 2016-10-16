@@ -34,12 +34,19 @@ This section describes how to install the plugin and get it working.
 
 Our WordPress plugin allows you to share the same users across multiple applications inside or out of WordPress.
 
+= What are the PHP requirements? =
+
+Your sever must run PHP 5.5+
+
 == Screenshots ==
 
 1. Installing this plugin gives you a new option in the `settings` menu for Stormpath.  Here you can add your apiKey.properties file OR
 the raw ID and Secret.
 
 == Changelog ==
+
+= 0.1.2 =
+* Patch Update for empty() usage in PHP versions 5.5 and below
 
 = 0.1.1 =
 * Current users will be created in Stormpath at next login
