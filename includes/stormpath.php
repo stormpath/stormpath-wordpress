@@ -182,9 +182,12 @@ class Stormpath {
 	private function resolve_api_keys() {
 		$id = null;
 		$secret = null;
+		$properties = get_option( 'stormpath_client_apikey_properties', null );
+		$apiKeyId = get_option( 'stormpath_client_apikey_id', null );
+		$apiKeySecret = get_option( 'stormpath_client_apikey_secret', null );
 
-		if ( ! empty( get_option( 'stormpath_client_apikey_properties' ) ) ) {
-			$file = get_option( 'stormpath_client_apikey_properties' );
+		if ( ! empty( $properties ) ) {
+			$file = $properties;
 
 			if ( false === is_file( $file ) && false === is_readable( $file ) ) {
 				do_action( 'stormpath_admin_error', 'api_key_properties_file_invalid' );
@@ -204,7 +207,7 @@ class Stormpath {
 			}
 
 			if ( ( ( count( $array ) !== 2 ) || ( ( ! isset( $array['apiKey.id'] )) && ( ! isset( $array['apiKey.secret'] )) ) ) &&
-				( empty( get_option( 'stormpath_client_apikey_id' ) ) || empty( get_option( 'stormpath_client_apikey_secret' ) ) ) ) {
+				( empty( $apiKeyId ) || empty( $apiKeySecret ) ) ) {
 				do_action( 'stormpath_admin_error', 'api_key_properties_file_invalid' );
 			}
 
@@ -212,12 +215,12 @@ class Stormpath {
 			$secret = $array['apiKey.secret'];
 		}
 
-		if ( ! empty( get_option( 'stormpath_client_apikey_id', '' ) )  && ! empty( get_option( 'stormpath_client_apikey_secret', '' ) ) ) {
+		if ( ! empty( $apiKeyId )  && ! empty( $apiKeySecret ) ) {
 
 			do_action( 'stormpath_admin_warning', 'api_key_properties_file_should_be_used' );
 
-			$id = get_option( 'stormpath_client_apikey_id' );
-			$secret = get_option( 'stormpath_client_apikey_secret' );
+			$id = $apiKeyId;
+			$secret = $apiKeySecret;
 		}
 
 		return [ $id, $secret ];
