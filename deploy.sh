@@ -54,7 +54,7 @@ echo "Run svn add"
 svn st | grep '^!' | sed -e 's/\![ ]*/svn del -q /g' | sh
 echo "Run svn del"
 svn st | grep '^?' | sed -e 's/\?[ ]*/svn add -q /g' | sh
-
+echo $TRAVIS_TAG
 if [[ $TRAVIS_TAG && $SVN_USER && $SVN_PASS ]]; then
 	if [[ ! -d tags/$TRAVIS_TAG ]]; then
 		echo "Commit to $SVN_REPO."
