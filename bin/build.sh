@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-composer install
+composer install --no-dev --no-suggest
