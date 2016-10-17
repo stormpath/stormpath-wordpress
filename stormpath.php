@@ -3,7 +3,7 @@
  * Plugin Name: Stormpath
  * Plugin URI: https://stormpath.com
  * Description: Use Stormpath for your authentication
- * Version: 0.1.1
+ * Version: 0.1.3
  * Author: Stormpath
  * Author URI: https://stormpath.com
  * Text Domain: stormpath-wordpress
