@@ -3,7 +3,7 @@ Contributors: bretterer, stormpath
 Tags: authentication, authorization, auth, stormpath, user, users, login, registration, social, social login
 Requires at least: 4.5.0
 Tested up to: 4.6.1
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ Your sever must run PHP 5.5+
 the raw ID and Secret.
 
 == Changelog ==
+
+= 0.1.3 =
+* Auto Deployment to WordPress setup
 
 = 0.1.2 =
 * Patch Update for empty() usage in PHP versions 5.5 and below
