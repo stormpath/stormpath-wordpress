@@ -30,8 +30,8 @@ git clone -q $GH_REF $(basename $SVN_REPO)/git
 cd $(basename $SVN_REPO)/git
 
 if [ -e "build.sh" ]; then
-	echo "Starting build.sh."
-	bash build.sh
+	echo "Starting bin/build.sh."
+	bash bin/build.sh
 fi
 
 cd $BASE_DIR/$(basename $SVN_REPO)
