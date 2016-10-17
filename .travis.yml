@@ -8,6 +8,8 @@ env:
   global:
     - WP_VERSION=master
     - WP_VERSION=4.6
+    - SVN_REPO: https://plugins.svn.wordpress.org/stormpath/
+    - secure: "cxXIlRQniuj4DSsEnXyrGAdTyM7ifKUpa5u7gVvUa513LGdQEKfII8b3SQYdcOfDlQCFmoIg7lvRtmAPIHxvGX9iM9wn8sQA5rG8aVSy6Y/4PVaSEpOK3BhzmFwYQcYiEIocWO+fzbRpwUBSz4pwB0fL3dXbgQT9V0/lAE5EL/uBROSGItZFhkwJa9Pj80ddbZzAUXhLhhpllLXFmId2rbAoL6BL6xEfg1mPGn8afZQ39DZtOI0FIoZn8eBYH7ATqUaNh2bKwSSl+05wREUEom48uQ2fMDb4QOCLzKai7lOiNbj+S6bZ01IOuZLWE+lt+LE9GrVrLukJUytaCx+JBXsVWysNAL5CM9P35YozUsuZwhbItM7TPWr/a7BaYF+7ZFHGIg+8yKD0B5lyNHKRNUG+OY6StW9F90/2ii0JJ0+OCyzFeDm4GdMxoAKXdEYGNes3V35dh8Q7fswxizuJS95iElogdV4ErNxEDhWZcnXQeNKX7AMbXm900joWi9WW4pGM5GwkWybffXbm8cN0o5D3inQFLr1OnU7XSy+zH5Zs9Gjwn5C2aCJ1qrAGuHxlfkhImq03e8Rj9dX9eE2hszWZ9RagsYicL0/c/1P8UqOAgzLgLMsSDBcUQrxbJUaW42G862oBoB14vN1z9XssQpaAbljfP5z8kCgIbh8eh5I="
 
 before_script:
   - composer install --prefer-source
@@ -19,3 +21,6 @@ script:
 cache:
   directories:
     - vendor/
+
+after_success:
+  - bash build/deploy.sh
