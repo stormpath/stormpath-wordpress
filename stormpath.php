@@ -3,7 +3,7 @@
  * Plugin Name: Stormpath
  * Plugin URI: https://stormpath.com
  * Description: Use Stormpath for your authentication
- * Version: 0.1.3
+ * Version: 0.1.4
  * Author: Stormpath
  * Author URI: https://stormpath.com
  * Text Domain: stormpath-wordpress
@@ -15,7 +15,7 @@
 namespace Stormpath\WordPress;
 
 define( 'STORMPATH_INTEGRATION',    'stormpath-wordpress' );
-define( 'STORMPATH_VERSION',        '0.1.3' );
+define( 'STORMPATH_VERSION',        '0.1.4' );
 
 require_once dirname( __FILE__ ) . '/vendor/autoload.php';
 require_once dirname( __FILE__ ) . '/includes/bootstrap.php';
