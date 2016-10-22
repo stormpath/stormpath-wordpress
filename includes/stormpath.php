@@ -93,7 +93,7 @@ class Stormpath {
 		add_action( 'stormpath_admin_warning', [ (new Warning), 'display' ], 10, 2 );
 		add_action( 'stormpath_admin_success', [ (new Success), 'display' ], 10, 2 );
 		add_action( 'admin_menu', [ $this->settings, 'add_options_page' ] );
-
+		add_filter( 'shake_error_codes', [ $this, 'add_shake_error_codes' ], 10, 1 );
 	}
 
 	/**
@@ -111,9 +111,28 @@ class Stormpath {
 			add_action( 'after_password_reset', [ $this->authenticate, 'password_changed' ], 10, 2 );
 			add_filter( 'authenticate', [ $this->authenticate, 'authenticate' ], 10, 3 );
 			add_filter( 'login_errors', [ $this, 'login_errors' ], 10, 1 );
+
 		} else {
 			do_action( 'stormpath_admin_error', 'could_not_contact_stormpath' );
 		}
+	}
+
+	/**
+	 * Adds the custom shake commands for the login screen.
+	 *
+	 * @param array $currentCodes The current error codes in the shake error filter.
+	 * @return array
+	 */
+	public function add_shake_error_codes( $currentCodes ) {
+		$myCodes = [
+			'invalid_username',
+			'invalid_email',
+			'incorrect_password',
+			'authentication_failed',
+			'stormpath_error',
+		];
+
+		return array_unique( array_merge( $currentCodes, $myCodes ) );
 	}
 
 	/**
@@ -124,6 +143,7 @@ class Stormpath {
 	 */
 	public function login_errors( $errors ) {
 		global $errors;
+
 		$err_codes = $errors->get_error_codes();
 
 		$error = $errors->get_error_message();
