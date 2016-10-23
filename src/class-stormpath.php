@@ -21,39 +21,8 @@
  * @package Stormpath\WordPress;
  */
 
-namespace Stormpath\WordPress\Notices;
-
-/**
- * Class Success
- *
- * @category    Success
- * @package     Stormpath\WordPress\Notices
- * @author      Stormpath <support@stormpath.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @link        https://stormpath.com/
- */
-class Success extends Notices
-{
-	/**
-	 * The message property for the notice.
-	 *
-	 * @var string $message The message of the notice.
-	 */
-	protected $message = 'Stormpath wants to let you know, that was successful!';
-
-	/**
-	 * The level of the notice to be displayed.
-	 *
-	 * @var string $level The level of the notice.
-	 */
-	protected $level = 'success';
-
-	/**
-	 * The dismissible property.
-	 *
-	 * @var bool $dismissible Should the notice be dismissible.
-	 */
-	protected $dismissible = true;
-
-
+if ( ! defined( 'ABSPATH' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	exit();
 }
