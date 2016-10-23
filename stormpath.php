@@ -27,5 +27,11 @@ define( 'STORMPATH_MIN_PHP_VERSION',    '5.5.0' );
 define( 'STORMPATH_BASEPATH',           dirname( __FILE__ ) );
 define( 'STORMPATH_PLUGIN_ROOT_URL',    plugin_dir_url( __FILE__ ) );
 
-require_once STORMPATH_BASEPATH . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
+$stormpath = Stormpath::get_instance();
+
+do_action( 'stormpath_pre_run', [ $stormpath ] );
+$stormpath->run();
+
+do_action( 'stormpath_post_run', [ $stormpath ] );

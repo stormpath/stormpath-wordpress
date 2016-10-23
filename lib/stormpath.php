@@ -29,4 +29,52 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
+/**
+ * Main hub for the Stormpath WordPress plugin
+ *
+ * @category    Plugin
+ * @package     Stormpath\WordPress
+ * @author      Brian Retterer <brian@stormpath.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ * @link        https://stormpath.com/
+ * @since       1.0.0
+ */
+class Stormpath {
 
+	/**
+	 * The singleton for Stormpath\WordPress\Stormpath.
+	 *
+	 * @var null|\Stormpath\WordPress\Stormpath
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Stormpath constructor.
+	 */
+	protected function __construct() {
+
+	}
+
+	/**
+	 * Gets the current instance or makes a new one.
+	 *
+	 * @return Stormpath
+	 */
+	public static function get_instance() {
+
+		if ( null === self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Run the Stormpath Plugin.
+	 *
+	 * @return void
+	 */
+	public function run() {
+
+	}
+}
