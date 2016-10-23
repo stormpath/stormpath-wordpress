@@ -20,11 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-
 define( 'STORMPATH_INTEGRATION',        'stormpath-wordpress' );
 define( 'STORMPATH_VERSION',            '1.0.0-develop' );
 define( 'STORMPATH_MIN_WP_VERSION',     '4.5.0' );
 define( 'STORMPATH_MIN_PHP_VERSION',    '5.5.0' );
 define( 'STORMPATH_BASEPATH',           dirname( __FILE__ ) );
 define( 'STORMPATH_PLUGIN_ROOT_URL',    plugin_dir_url( __FILE__ ) );
+
+require_once STORMPATH_BASEPATH . '/vendor/autoload.php';
 

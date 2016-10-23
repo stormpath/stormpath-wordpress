@@ -23,5 +23,10 @@
     "require": {
         "symfony/yaml": "^3.1",
         "stormpath/sdk": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stormpath\\WordPress\\": "src"
+        }
     }
 }
