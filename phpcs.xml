@@ -10,7 +10,7 @@
 
 	<exclude-pattern>*/tests/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/images/*</exclude-pattern>
+	<exclude-pattern>*/assets/*</exclude-pattern>
 
 	<!-- Commenting Sniffs -->
 

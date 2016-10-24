@@ -52,7 +52,7 @@ class Stormpath {
 	 * Stormpath constructor.
 	 */
 	protected function __construct() {
-
+		$this->register_hook_callbacks();
 	}
 
 	/**
@@ -76,5 +76,97 @@ class Stormpath {
 	 */
 	public function run() {
 
+	}
+
+	/**
+	 * Register all hook callbacks.
+	 *
+	 * @return void
+	 */
+	public function register_hook_callbacks() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_resources' ) );
+		add_action( 'admin_menu', array( $this, 'admin_menus' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+	}
+
+	/**
+	 * Adds the admin user menu item.
+	 *
+	 * @return void
+	 */
+	public function admin_menus() {
+		add_users_page( 'Stormpath', 'Stormpath', 'manage_options', 'stormpath', function() { Stormpath::view( 'stormpath-settings' ); } );
+	}
+
+	/**
+	 * Loads the admin resources
+	 *
+	 * @return void
+	 */
+	public function load_admin_resources() {
+		wp_register_script(
+			'stormpath-admin-script',
+			STORMPATH_PLUGIN_ROOT_URL . '/assets/js/stormpath-admin.js',
+			[],
+			STORMPATH_VERSION,
+			'all'
+		);
+
+		wp_register_style(
+			'stormpath-admin-style',
+			STORMPATH_PLUGIN_ROOT_URL . '/assets/css/stormpath-admin.css',
+			[],
+			STORMPATH_VERSION,
+			'all'
+		);
+
+		wp_register_style(
+			'stormpath-admin-bootstrap',
+			STORMPATH_PLUGIN_ROOT_URL . '/assets/css/bootstrap.min.css',
+			[ 'stormpath-admin-style' ],
+			STORMPATH_VERSION,
+			'all'
+		);
+
+		wp_enqueue_style( 'stormpath-admin-style' );
+		wp_enqueue_style( 'stormpath-admin-bootstrap' );
+		wp_enqueue_script( 'stormpath-admin-script' );
+	}
+
+	/**
+	 * Initialization admin  for the Plugin
+	 *
+	 * @return void
+	 */
+	public function admin_init() {
+		$this->register_options();
+	}
+
+	/**
+	 * Display a view from the assets/templates directory.
+	 *
+	 * @param string $name the name of the view you want to include.
+	 * @throws \InvalidArgumentException Invalid path to the view.
+	 * @return void
+	 */
+	public static function view( $name ) {
+		$name = str_replace( '.', DIRECTORY_SEPARATOR, $name );
+		$path = STORMPATH_BASEPATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . $name . '.php';
+
+		if ( ! file_exists( $path ) ) {
+			throw new \InvalidArgumentException( 'This is not the view you are looking for!' );
+		}
+		include $path;
+	}
+
+	/**
+	 * Setup the settings that this plugin has access to.
+	 *
+	 * @return void
+	 */
+	public function register_options() {
+		register_setting( 'stormpath-settings', 'stormpath_client_apikey_id' );
+		register_setting( 'stormpath-settings', 'stormpath_client_apikey_secret' );
+		register_setting( 'stormpath-settings', 'stormpath_application' );
 	}
 }
