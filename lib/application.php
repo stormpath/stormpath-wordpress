@@ -23,7 +23,7 @@
 
 namespace Stormpath\WordPress;
 
-use Stormpath\Resource\ResourceError;
+use Stormpath\ClientBuilder;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * ApiKey Management for Plugin
+ * Application for the Stormpath application.
  *
  * @category    Plugin
  * @package     Stormpath\WordPress
@@ -41,41 +41,26 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @link        https://stormpath.com/
  * @since       1.0.0
  */
-class ApiKeys {
+class Application {
 
 	/**
-	 * The singleton for Stormpath\WordPress\ApiKeys.
+	 * The singleton for Stormpath\WordPress\Application.
 	 *
-	 * @var null|\Stormpath\WordPress\ApiKeys
+	 * @var null|\Stormpath\WordPress\Application
 	 */
 	protected static $instance = null;
 
 	/**
-	 * The API Key Id.
-	 *
-	 * @var string|null
-	 */
-	protected $apiKeyId = null;
-
-	/**
-	 * The API Key Secret.
-	 *
-	 * @var string|null
-	 */
-	protected $apiKeySecret = null;
-
-	/**
-	 * ApiKeys constructor.
+	 * Application constructor.
 	 */
 	protected function __construct() {
-		$this->apiKeyId = get_option( 'stormpath_client_apikey_id' );
-		$this->apiKeySecret = get_option( 'stormpath_client_apikey_secret' );
+		$this->client = Client::get_instance( ApiKeys::get_instance() );
 	}
 
 	/**
 	 * Gets the current instance or makes a new one.
 	 *
-	 * @return ApiKeys
+	 * @return Application
 	 */
 	public static function get_instance() {
 
@@ -87,37 +72,19 @@ class ApiKeys {
 	}
 
 	/**
-	 * Tells if the api keys are valid by attempting to get the current tenant.
+	 * Gets all applications from the transient.
 	 *
-	 * @return bool
+	 * @return mixed
 	 */
-	public function api_keys_valid() {
-		$client = Client::get_instance( $this );
+	public function get_application_list() {
+		$list = get_transient( 'stormpath_application_list' );
 
-		try {
-			$client->get_client()->getCurrentTenant();
-			return true;
-		} catch ( ResourceError $re ) {
-			return false;
+		if ( ! $list ) {
+			$list = $this->client->get_client()->getCurrentTenant()->applications;
+			set_transient( 'stormpath_application_list', $list, 3600 );
 		}
 
-	}
+		return $list;
 
-	/**
-	 * The API Key Id.
-	 *
-	 * @return string|null
-	 */
-	public function get_id() {
-		return $this->apiKeyId;
-	}
-
-	/**
-	 * The API Key Secret.
-	 *
-	 * @return string|null
-	 */
-	public function get_secret() {
-		return $this->apiKeySecret;
 	}
 }

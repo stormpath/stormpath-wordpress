@@ -5,6 +5,7 @@
 			type="text"
 			class="form-control"
 			id="stormpath_client_apikey_id"
+			name="stormpath_client_apikey_id"
 			placeholder="1SCEJ0Y1R9MFM8NSUM2HXM7TF"
 			value="<?php esc_html_e( get_option( 'stormpath_client_apikey_id' ) ); ?>"
 		>
@@ -18,6 +19,7 @@
 			type="password"
 			class="form-control"
 			id="stormpath_client_apikey_secret"
+			name="stormpath_client_apikey_secret"
 			placeholder="2e+rv1NClLife+HmAigI1Kg6PRFqRTFb422DRdsVwKs"
 			value="<?php esc_html_e( get_option( 'stormpath_client_apikey_secret' ) ); ?>"
 		>

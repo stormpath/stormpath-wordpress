@@ -23,7 +23,7 @@
 
 namespace Stormpath\WordPress;
 
-use Stormpath\Resource\ResourceError;
+use Stormpath\ClientBuilder;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * ApiKey Management for Plugin
+ * Client for the Stormpath application.
  *
  * @category    Plugin
  * @package     Stormpath\WordPress
@@ -41,83 +41,65 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @link        https://stormpath.com/
  * @since       1.0.0
  */
-class ApiKeys {
+class Client {
 
 	/**
-	 * The singleton for Stormpath\WordPress\ApiKeys.
+	 * The singleton for Stormpath\WordPress\Client.
 	 *
-	 * @var null|\Stormpath\WordPress\ApiKeys
+	 * @var null|\Stormpath\WordPress\Client
 	 */
 	protected static $instance = null;
 
 	/**
-	 * The API Key Id.
+	 * Client constructor.
 	 *
-	 * @var string|null
+	 * @param ApiKeys $apiKeys The api keys object.
 	 */
-	protected $apiKeyId = null;
+	protected function __construct( ApiKeys $apiKeys ) {
+		$this->apiKeys = $apiKeys;
 
-	/**
-	 * The API Key Secret.
-	 *
-	 * @var string|null
-	 */
-	protected $apiKeySecret = null;
-
-	/**
-	 * ApiKeys constructor.
-	 */
-	protected function __construct() {
-		$this->apiKeyId = get_option( 'stormpath_client_apikey_id' );
-		$this->apiKeySecret = get_option( 'stormpath_client_apikey_secret' );
+		$this->stormpath_client = $this->build_stormpath_client();
 	}
 
 	/**
 	 * Gets the current instance or makes a new one.
 	 *
-	 * @return ApiKeys
+	 * @param ApiKeys $apiKeys The api keys object.
+	 * @return Client
 	 */
-	public static function get_instance() {
+	public static function get_instance( ApiKeys $apiKeys ) {
 
 		if ( null === self::$instance ) {
-			self::$instance = new self;
+			self::$instance = new self( $apiKeys );
 		}
 
 		return self::$instance;
 	}
 
 	/**
-	 * Tells if the api keys are valid by attempting to get the current tenant.
+	 * Build an instance of Stormpath Client.
 	 *
-	 * @return bool
+	 * @return null|\Stormpath\Client
 	 */
-	public function api_keys_valid() {
-		$client = Client::get_instance( $this );
+	private function build_stormpath_client() {
+		$id = $this->apiKeys->get_id();
+		$secret = $this->apiKeys->get_secret();
 
-		try {
-			$client->get_client()->getCurrentTenant();
-			return true;
-		} catch ( ResourceError $re ) {
-			return false;
+		if ( null === $id || null === $secret ) {
+			return null;
 		}
 
+		$clientBuilder = new ClientBuilder();
+		return $clientBuilder->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
+			->build();
 	}
 
 	/**
-	 * The API Key Id.
+	 * Get the Stormpath Client.
 	 *
-	 * @return string|null
+	 * @return null|\Stormpath\Client
 	 */
-	public function get_id() {
-		return $this->apiKeyId;
-	}
-
-	/**
-	 * The API Key Secret.
-	 *
-	 * @return string|null
-	 */
-	public function get_secret() {
-		return $this->apiKeySecret;
+	public function get_client() {
+		return $this->stormpath_client;
 	}
 }
