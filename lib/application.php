@@ -23,7 +23,7 @@
 
 namespace Stormpath\WordPress;
 
-use Stormpath\ClientBuilder;
+use Stormpath\Resource\ResourceError;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -49,6 +49,13 @@ class Application {
 	 * @var null|\Stormpath\WordPress\Application
 	 */
 	protected static $instance = null;
+
+	/**
+	 * The application the user wants to use for the plugin.
+	 *
+	 * @var null|\Stormpath\Resource\Application
+	 */
+	protected $application = null;
 
 	/**
 	 * Application constructor.
@@ -86,5 +93,26 @@ class Application {
 
 		return $list;
 
+	}
+
+	/**
+	 * The currently used application.
+	 *
+	 * @return null|\Stormpath\Resource\Application
+	 */
+	public function get_application() {
+		if ( null === $this->application ) {
+			try {
+				$this->application = $this->client->get_client()->getDataStore()->getResource(
+					get_option( 'stormpath_application' ),
+					\Stormpath\Stormpath::APPLICATION,
+					[]
+				);
+			} catch (ResourceError $re ) {
+				$this->application = null;
+			}
+		}
+
+		return $this->application;
 	}
 }

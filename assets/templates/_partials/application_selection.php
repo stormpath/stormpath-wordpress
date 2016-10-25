@@ -1,6 +1,6 @@
 <div class="form-group">
-	<label for="stormpath_client_apikey_id" class="col-sm-2 control-label">Application</label>
-	<div class="col-sm-10">
+	<label for="stormpath_client_apikey_id" class="col-sm-3 control-label">Application</label>
+	<div class="col-sm-9">
 		<select class="form-control" name="stormpath_application">
 		<?php if ( ! \Stormpath\WordPress\ApiKeys::get_instance()->api_keys_valid() ) : ?>
 			<option value="">Please save correct API Keys to show your list of applications.</option>

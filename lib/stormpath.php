@@ -23,6 +23,8 @@
 
 namespace Stormpath\WordPress;
 
+use Stormpath\WordPress\Hooks\PluginManager;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -76,6 +78,8 @@ class Stormpath {
 	 */
 	public function run() {
 
+		AjaxCalls::handle();
+
 	}
 
 	/**
@@ -84,9 +88,16 @@ class Stormpath {
 	 * @return void
 	 */
 	public function register_hook_callbacks() {
+		register_activation_hook( STORMPATH_BASEFILE, [ PluginManager::class, 'activate' ] );
+		register_deactivation_hook( STORMPATH_BASEFILE, [ PluginManager::class, 'deactivate' ] );
+		register_uninstall_hook( STORMPATH_BASEFILE, [ PluginManager::class, 'uninstall' ] );
+
+		add_filter( 'plugin_action_links_' . plugin_basename( STORMPATH_BASEFILE ), [ PluginManager::class, 'add_action_links' ] );
+
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_resources' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menus' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
 	}
 
 	/**
@@ -106,15 +117,15 @@ class Stormpath {
 	public function load_admin_resources() {
 		wp_register_script(
 			'stormpath-admin-script',
-			STORMPATH_PLUGIN_ROOT_URL . '/assets/js/stormpath-admin.js',
-			[],
+			STORMPATH_PLUGIN_ROOT_URL . 'assets/js/stormpath-admin.js',
+			[ 'jquery', 'backbone' ],
 			STORMPATH_VERSION,
 			'all'
 		);
 
 		wp_register_style(
 			'stormpath-admin-style',
-			STORMPATH_PLUGIN_ROOT_URL . '/assets/css/stormpath-admin.css',
+			STORMPATH_PLUGIN_ROOT_URL . 'assets/css/stormpath-admin.css',
 			[],
 			STORMPATH_VERSION,
 			'all'
@@ -168,5 +179,6 @@ class Stormpath {
 		register_setting( 'stormpath-settings', 'stormpath_client_apikey_id' );
 		register_setting( 'stormpath-settings', 'stormpath_client_apikey_secret' );
 		register_setting( 'stormpath-settings', 'stormpath_application' );
+		register_setting( 'stormpath-settings', 'stormpath_powered_by' );
 	}
 }
