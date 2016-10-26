@@ -166,7 +166,7 @@ class Stormpath {
 
 		$builder = new \Stormpath\ClientBuilder();
 		$client = $builder->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
-			->setIntegration( STORMPATH_INTEGRATION . '/' . STORMPATH_VERSION )
+			->setIntegration( STORMPATH_INTEGRATION . '/' . STORMPATH_VERSION . ' WordPress/' . get_bloginfo( 'version' ) )
 			->build();
 		$client->getInstance();
 		return $client;
