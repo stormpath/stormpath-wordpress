@@ -166,8 +166,9 @@ class Stormpath {
 
 		$builder = new \Stormpath\ClientBuilder();
 		$client = $builder->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
+			->setIntegration( STORMPATH_INTEGRATION . '/' . STORMPATH_VERSION )
 			->build();
-
+		$client->getInstance();
 		return $client;
 
 	}
