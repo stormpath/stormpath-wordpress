@@ -3,7 +3,7 @@ Contributors: bretterer, stormpath
 Tags: authentication, authorization, auth, stormpath, user, users, login, registration, social, social login
 Requires at least: 4.5.0
 Tested up to: 4.6.1
-Stable tag: 0.1.5
+Stable tag: 0.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,9 @@ the raw ID and Secret.
 
 == Changelog ==
 
+= 0.1.6 =
+* Reporting for the plugin version to Stormpath updated.
+
 = 0.1.5 =
 * Another Auto Deployment Bug Fix
 
@@ -65,6 +68,10 @@ the raw ID and Secret.
 * Initial Release
 
 == Upgrade Notice ==
+
+= 0.1.6 =
+Update was made to the user agent so Stormpath knows the requests are coming from WordPress and which version of
+the plugin.
 
 = 0.1.1 =
 More robust error handling on accounts not existing in Stormpath.
