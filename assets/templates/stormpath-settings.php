@@ -60,7 +60,7 @@
 				</div>
 			</div>
 
-			<div class="stormpath-container">
+			<div class="stormpath-container" style="display:none;">
 				<div class="stormpath-container-header">
 					<h3>Sync Users</h3>
 				</div>

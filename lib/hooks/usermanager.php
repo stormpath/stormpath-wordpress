@@ -64,10 +64,10 @@ class UserManager {
 	 *
 	 * @param Account $account The Stormpath Account.
 	 *
-	 * @throws \InvalidArgumentException A user already exists in WordPress with that username.
 	 * @return WP_User
 	 */
 	public function create_wp_user( Account $account ) {
+
 		$userAccountInfo = [
 			'user_email'    => $account->email,
 			'user_login'    => $account->username,
@@ -75,17 +75,14 @@ class UserManager {
 			'last_name'     => $account->surname,
 			'user_pass'     => wp_hash_password( wp_generate_password( 32 ) ),
 		];
-		$newUser = wp_insert_user( $userAccountInfo );
 
-		if ( $newUser instanceof WP_Error ) {
+		$wpuser = get_user_by( 'login', $account->username );
 
-			wp_mail( get_option( 'admin_email' ), 'Stormpath authentication error.', 'A user tried to log into the 
-			WordPress website, and succeeded, however the user was not able to log in fully because the creation
-			of the WordPress user failed.  The reason: ' . $newUser->get_error_message() );
-
-			throw new \InvalidArgumentException( 'Invalid Username/Email or Password.  Please try again, or contact the 
-			the site administrator. <a href="/">Home</a>' );
+		if ( false !== $wpuser ) {
+			$userAccountInfo['user_login'] = $account->email;
 		}
+
+		$newUser = wp_insert_user( $userAccountInfo );
 
 		return new WP_User( $newUser );
 	}
