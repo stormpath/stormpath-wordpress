@@ -92,6 +92,10 @@ class ApiKeys {
 	 * @return bool
 	 */
 	public function api_keys_valid() {
+		if ( empty( $this->apiKeyId ) || empty( $this->apiKeySecret ) ) {
+			return false;
+		}
+
 		$client = Client::get_instance( $this );
 
 		try {

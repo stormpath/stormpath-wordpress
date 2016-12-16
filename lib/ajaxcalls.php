@@ -161,30 +161,40 @@ class AjaxCalls {
 		$idSite = Client::get_instance( ApiKeys::get_instance() )->get_client()->getDataStore()->getResource( $idSiteUrl, IdSiteSettings::class );
 
 		if ( isset( $_POST['data'] ) ) {
-			$data = sanitize_text_field( wp_unslash( $_POST['data'] ) );
+			$data = [
+				'authorizedOrigins' => str_replace( ' ', "\n", sanitize_text_field( wp_unslash( $_POST['data']['authorizedOrigins'] ) ) ),
+				'redirectUris' => str_replace( ' ', "\n", sanitize_text_field( wp_unslash( $_POST['data']['redirectUris'] ) ) ),
+				'sslPublic' => sanitize_text_field( wp_unslash( $_POST['data']['sslPublic'] ) ),
+				'sslPrivate' => sanitize_text_field( wp_unslash( $_POST['data']['sslPrivate'] ) ),
+				'tti' => sanitize_text_field( wp_unslash( $_POST['data']['tti'] ) ),
+				'ttl' => sanitize_text_field( wp_unslash( $_POST['data']['ttl'] ) ),
+			];
+
+			$origins = trim( $data['authorizedOrigins'] );
+			$originsArr = explode( "\n", $origins );
+			$originsArr = array_filter( $originsArr, 'trim' );
+
+			$redirects = trim( $data['redirectUris'] );
+			$redirectsArr = explode( "\n", $redirects );
+			$redirectsArr = array_filter( $redirectsArr, 'trim' );
+
+			$idSite->publicCert = $data['sslPublic'];
+			$idSite->privateCert = $data['sslPrivate'];
+			$idSite->origin = $originsArr;
+			$idSite->redirectUri = $redirectsArr;
+			$idSite->tti = $data['tti'];
+			$idSite->ttl = $data['ttl'];
+
+			try {
+				$idSite->save();
+				wp_send_json_success();
+			} catch (ResourceError $re) {
+				wp_send_json_error( $re->getMessage() );
+			}
+
 		}
 
-		$origins = trim( $data['authorizedOrigins'] );
-		$originsArr = explode( "\n", $origins );
-		$originsArr = array_filter( $originsArr, 'trim' );
-
-		$redirects = trim( $data['redirectUris'] );
-		$redirectsArr = explode( "\n", $redirects );
-		$redirectsArr = array_filter( $redirectsArr, 'trim' );
-
-		$idSite->publicCert = $data['sslPublic'];
-		$idSite->privateCert = $data['sslPrivate'];
-		$idSite->origin = $originsArr;
-		$idSite->redirectUri = $redirectsArr;
-		$idSite->tti = $data['tti'];
-		$idSite->ttl = $data['ttl'];
-
-		try {
-			$idSite->save();
-			wp_send_json_success();
-		} catch (ResourceError $re) {
-			wp_send_json_error( $re->getMessage() );
-		}
+		wp_send_json_error( __( 'There was an error saving data' ) );
 
 		wp_die();
 	}
@@ -282,3 +292,5 @@ class IdSiteSettings extends \Stormpath\Resource\InstanceResource {
 	    return $this;
 	}
 }
+
+

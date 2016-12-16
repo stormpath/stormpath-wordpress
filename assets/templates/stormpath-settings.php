@@ -56,7 +56,23 @@
 
 						<?php submit_button( 'Update Settings', 'button-stormpath', 'submit', true, [ 'class' => 'stormpath-submit' ] ); ?>
 					</form>
-					</form>
+
+				</div>
+			</div>
+
+			<div class="stormpath-container">
+				<div class="stormpath-container-header">
+					<h3>Sync Users</h3>
+				</div>
+				<div class="stormpath-container-body">
+					<p>When you initially set up Stormpath, it is recommended that you sync users from WordPress over to Stormpath.  This will allow your users to log into your site.  However, due to the way that WordPress stores their passwords, we are not able to import them into Stormpath. This means that you will have to require your users to reset their passwords after the sync is complete.</p>
+					<button>Sync Users Now</button>
+
+					<p>You can set syncing on the WordPress cron job.  This will make sure all data is the same for your user data is the same from Stormpath inside of your WordPress install and any new users created in WordPress are in Stormpath.  Typically you will want to keep this enabled.</p>
+					<span class="stormpath-enable-toggle">
+					<?php $checked = get_option( 'stormpath_id_site', true ) ? 'checked' : ''; ?>
+					<input type="checkbox" <?php esc_html_e( $checked ); ?> data-toggle="toggle" class="stormpath-option-toggle enable-user-sync" data-on="Enabled" data-off="Disabled"">
+					</span>
 
 				</div>
 			</div>
@@ -140,6 +156,7 @@
 								name="stormpath_id_site_authorized_redirect_urls"
 							></textarea>
 								<span id="helpBlock" class="help-block">A list of URLs that the user can be sent to after they login or register at the ID Site. One URL per line.</span>
+								<span id="helpBlock" class="help-block">Please make sure <?php echo( get_site_url() . '/stormpath/callback' ); ?> is added here, otherwise ID Site will not work.</span>
 							</div>
 						</div>
 

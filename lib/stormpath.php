@@ -23,6 +23,8 @@
 
 namespace Stormpath\WordPress;
 
+use Stormpath\WordPress\Hooks\IdSiteManager;
+use Stormpath\WordPress\Hooks\LoginManager;
 use Stormpath\WordPress\Hooks\PluginManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -93,11 +95,14 @@ class Stormpath {
 		register_uninstall_hook( STORMPATH_BASEFILE, [ PluginManager::class, 'uninstall' ] );
 
 		add_filter( 'plugin_action_links_' . plugin_basename( STORMPATH_BASEFILE ), [ PluginManager::class, 'add_action_links' ] );
+		add_filter( 'template_include', [ IdSiteManager::class, 'add_id_site_callback' ] );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_resources' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menus' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
+		add_action( 'login_form_login', [ LoginManager::class, 'handle' ] );
+		add_action( 'wp_logout', [ new LoginManager(), 'logout' ] );
 	}
 
 	/**
@@ -152,6 +157,7 @@ class Stormpath {
 	public function admin_init() {
 		$this->register_options();
 	}
+
 
 	/**
 	 * Display a view from the assets/templates directory.
