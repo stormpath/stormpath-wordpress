@@ -85,13 +85,85 @@ class LoginManager {
 	 * @return void
 	 */
 	public function logout( $state = null ) {
-		$application = Application::get_instance();
-		$properties = [ 'callbackUri' => get_site_url() . '/stormpath/callback', 'logout' => true ];
 
-		if ( null !== $state ) {
-			$properties['state'] = $state;
+		if ( $this->useIdSite ) {
+			$application = Application::get_instance();
+			$properties = [ 'callbackUri' => get_site_url() . '/stormpath/callback', 'logout' => true ];
+
+			if ( null !== $state ) {
+				$properties['state'] = $state;
+			}
+			wp_redirect( $application->get_application()->createIdSiteUrl( $properties ) );
+			exit;
 		}
-		wp_redirect( $application->get_application()->createIdSiteUrl( $properties ) );
-		exit;
+	}
+
+	/**
+	 * The main authenticate method.
+	 *
+	 * @param mixed  $user     The WordPress User.
+	 * @param string $username Username.
+	 * @param string $password Password.
+	 * @return mixed
+	 */
+	public function authenticate( $user, $username, $password ) {
+		remove_action( 'authenticate', 'wp_authenticate_username_password', 20 );
+
+		if ( empty( $username ) || empty( $password ) ) {
+			if ( is_wp_error( $user ) ) {
+				return $user;
+			}
+		}
+
+		$authenticationRequest = new \Stormpath\Authc\UsernamePasswordRequest(
+			$username,
+			$password
+		);
+
+		$account = null;
+		try {
+			$application = Application::get_instance()->get_application();
+
+			$account = $application->authenticateAccount( $authenticationRequest )->account;
+
+			$userManager = new UserManager();
+			$user = $userManager->find_user_by_email( $account->email );
+
+			if ( false === $user ) {
+				try {
+					$user = $userManager->create_wp_user( $account );
+				} catch (\Exception $e) {
+					$loginManager = new LoginManager();
+					$loginManager->logout( $e->getMessage() );
+					wp_die();
+				}
+			}
+
+			wp_set_auth_cookie( $user->ID );
+			return wp_set_current_user( $user->ID, $user->user_login );
+
+		} catch (\Exception $e) {
+			return false;
+		}
+
+	}
+
+	/**
+	 * Attempt a normal login with WordPress core function.
+	 *
+	 * @param string $username The username of login attempt.
+	 * @param string $password The password of the login attempt.
+	 * @return boolean|\Stormpath\Resource\Account
+	 */
+	private function attempt_normal_login( $username, $password ) {
+		$user = get_user_by( 'login', $username );
+		if ( $user && wp_check_password( $password, $user->data->user_pass, $user->ID ) ) {
+			return $this->register_stormpath_user( $user, $password );
+		}
+		$user = get_user_by( 'email', $username );
+		if ( $user && wp_check_password( $password, $user->data->user_pass, $user->ID ) ) {
+			return $this->register_stormpath_user( $user, $password );
+		}
+		return false;
 	}
 }

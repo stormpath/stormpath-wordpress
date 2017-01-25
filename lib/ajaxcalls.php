@@ -49,6 +49,9 @@ class AjaxCalls {
 		add_action( 'wp_ajax_stormpath_get_id_site_settings', [ $this, 'get_id_site_options' ] );
 		add_action( 'wp_ajax_stormpath_update_id_site_settings', [ $this, 'update_id_site_options' ] );
 		add_action( 'wp_ajax_nopriv_stormpath_update_id_site_settings', [ $this, 'update_id_site_options' ] );
+
+		add_action( 'wp_ajax_stormpath_update_cache_settings', [ $this, 'update_cache_options' ] );
+		add_action( 'wp_ajax_nopriv_stormpath_update_cache_settings', [ $this, 'update_cache_options' ] );
 	}
 
 	/**
@@ -198,7 +201,55 @@ class AjaxCalls {
 
 		wp_die();
 	}
+
+	/**
+	 * Update the ID Site Options
+	 *
+	 * @return void
+	 */
+	public function update_cache_options() {
+
+		if ( ! isset( $_REQUEST['_nonce'] ) || ! isset( $_POST['data'] ) ) {
+			return;
+		}
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_nonce'] ) ), 'stormpath-settings-nonce' ) ) {
+			wp_die( 'nonce not valid' );
+		}
+
+		if ( isset( $_POST['data'] ) ) {
+			$data = [
+				'driver' => str_replace(' ', "\n", sanitize_text_field(wp_unslash(
+				$_POST['data']['driver']))),
+				'memcached_host' => str_replace(' ', "\n", sanitize_text_field(wp_unslash(
+				$_POST['data']['memcached_host']))),
+				'memcached_port' => str_replace(' ', "\n", sanitize_text_field(wp_unslash(
+				$_POST['data']['memcached_port']))),
+				'redis_host' => str_replace(' ', "\n", sanitize_text_field(wp_unslash(
+				$_POST['data']['redis_host']))),
+				'redis_password' => str_replace(' ', "\n", sanitize_text_field(wp_unslash(
+				$_POST['data']['redis_password']))),
+			];
+
+			update_option( 'stormpath_cache_driver', $data['driver'] );
+
+			// Memcached Settings.
+			update_option( 'stormpath_memcached_host', $data['memcached_host'] );
+			update_option( 'stormpath_memcached_port', $data['memcached_port'] );
+
+			// Redis Settings.
+			update_option( 'stormpath_redis_host', $data['redis_host'] );
+			update_option( 'stormpath_redis_password', $data['redis_password'] );
+
+			wp_send_json_success();
+		}
+
+		wp_send_json_error( __( 'There was an error saving data' ) );
+
+		wp_die();
+	}
 }
+
+
 
 /**
  * Helper for IdSiteSettings

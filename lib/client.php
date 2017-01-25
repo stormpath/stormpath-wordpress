@@ -90,8 +90,30 @@ class Client {
 		}
 
 		$clientBuilder = new ClientBuilder();
-		return $clientBuilder->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
+
+		if ( ! ! get_option( 'stormpath_cache_driver' ) ) {
+			$clientBuilder->setCacheManagerOptions( [
+				'cachemanager' => get_option( 'stormpath_cache_driver' ),
+				'memcached' => [
+					[
+						'host' => get_option( 'stormpath_memcached_host' ) ?: '127.0.0.1',
+						'port' => get_option( 'stormpath_memcached_port' ) ?: 11211,
+						'weight' => 100,
+					],
+				],
+				'redis' => array(
+					'host' => get_option( 'stormpath_redis_host' ) ?: '127.0.0.1',
+					'port' => 6379,
+					'password' => get_option( 'stormpath_redis_password' ) ?: null,
+				),
+			] );
+
+		}
+
+		$client = $clientBuilder->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
 			->build();
+
+		return $client;
 	}
 
 	/**

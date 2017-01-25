@@ -72,6 +72,9 @@ class IdSiteManager {
 					case 'authenticated' :
 						self::authenticate( $response );
 						break;
+					case 'registered' :
+						self::register( $response );
+						break;
 					case 'logout' :
 						self::logout( $response );
 						break;

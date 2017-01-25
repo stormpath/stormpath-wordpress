@@ -35,7 +35,9 @@ var StormpathSettings = Backbone.View.extend({
 
     events: {
         "change .enable-id-site": "toggleIdSite",
-        "click #update-id-site-settings": "updateIdSiteSettings"
+        "click #update-id-site-settings": "updateIdSiteSettings",
+        "change #stormpath_cache_driver": "updateCacheDriverOptions",
+        "click #update-stormpath-cache-settings": "updateCacheSettings"
     },
     toggleIdSite: function() {
         var position = jQuery('.enable-id-site').prop('checked') == true ? 1 : 0;
@@ -96,6 +98,68 @@ var StormpathSettings = Backbone.View.extend({
             });
         });
     },
+
+    updateCacheDriverOptions: function(e) {
+        e.preventDefault();
+
+        var selected = jQuery('select[name="stormpath_cache_driver"]').val();
+        var $memcachedSettings = jQuery('#stormpath_cache_driver_memcached_settings');
+        var $redisSettings = jQuery('#stormpath_cache_driver_redis_settings');
+
+        switch(selected.toLowerCase()) {
+            case 'memcached' :
+                $memcachedSettings.show();
+                $redisSettings.hide();
+                break;
+            case 'redis' :
+                $memcachedSettings.hide();
+                $redisSettings.show();
+                break;
+            default :
+                $memcachedSettings.hide();
+                $redisSettings.hide();
+                break;
+        }
+
+    },
+
+    updateCacheSettings: function(e) {
+        e.preventDefault();
+        jQuery(document).ready(function($) {
+            var oldValue = jQuery('#update-stormpath-cache-settings').val();
+            jQuery('#update-stormpath-cache-settings').val('Saving Settings').attr('disabled','disabled');
+
+            jQuery('.stormpath-cache-settings .stormpath-error-text').html('');
+            var data = {
+                'action': 'stormpath_update_cache_settings',
+                '_nonce': jQuery('#stormpath-settings').data('nonce'),
+                'data': {
+                    "driver": jQuery('select[name="stormpath_cache_driver"]').val(),
+                    "memcached_host": jQuery('#stormpath_memcached_host').val(),
+                    "memcached_port": jQuery('#stormpath_memcached_port').val(),
+                    "redis_host": jQuery('#stormpath_redis_host').val(),
+                    "redis_password": jQuery('#stormpath_redis_password').val()
+                }
+            };
+
+            console.log(data);
+            jQuery.post(ajaxurl, data, function(response) {
+                if(response.success === false) {
+                    jQuery('.stormpath-cache-settings .stormpath-error').fadeIn(200).delay(1000).fadeOut(300);
+                    jQuery('.stormpath-cache-settings .stormpath-error-text').html(response.data);
+                    jQuery('#update-stormpath-cache-settings').val(oldValue).attr('disabled',false);
+                }
+                else {
+                    jQuery('.stormpath-cache-settings .stormpath-updated').fadeIn(200).delay(1000).fadeOut(300);
+                    jQuery('#update-stormpath-cache-settings').val(oldValue).attr('disabled',false);
+                }
+            }).fail(function(response) {
+                jQuery('.stormpath-cache-settings .stormpath-error').fadeIn(200).delay(1000).fadeOut(300);
+                jQuery('#update-stormpath-cache-settings').val(oldValue).attr('disabled',false);
+            });
+        });
+    },
+
     initialize: function() {
         var position = jQuery('.enable-id-site').prop('checked');
         if ( position ) {

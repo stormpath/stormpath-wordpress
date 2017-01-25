@@ -26,6 +26,7 @@ namespace Stormpath\WordPress;
 use Stormpath\WordPress\Hooks\IdSiteManager;
 use Stormpath\WordPress\Hooks\LoginManager;
 use Stormpath\WordPress\Hooks\PluginManager;
+use Stormpath\WordPress\Hooks\UserManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -103,6 +104,14 @@ class Stormpath {
 
 		add_action( 'login_form_login', [ LoginManager::class, 'handle' ] );
 		add_action( 'wp_logout', [ new LoginManager(), 'logout' ] );
+
+		add_action( 'delete_user', [ new UserManager(), 'delete_stormpath_user' ] );
+
+		add_action( 'user_register', [ new UserManager(), 'user_registered' ], 10, 1 );
+		add_action( 'profile_update', [ new UserManager(), 'profile_update' ], 10, 2 );
+		add_action( 'after_password_reset', [ new UserManager(), 'password_changed' ], 10, 2 );
+		add_filter( 'authenticate', [ new UserManager(), 'authenticate' ], 10, 3 );
+
 	}
 
 	/**

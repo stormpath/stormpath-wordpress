@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Stormpath WordPress is a WordPress plugin to authenticate against a Stormpath Directory.
  * Copyright (C) 2016  Stormpath
@@ -60,20 +61,111 @@
 				</div>
 			</div>
 
-			<div class="stormpath-container" style="display:none;">
+			<div class="stormpath-container" >
 				<div class="stormpath-container-header">
-					<h3>Sync Users</h3>
+					<h3>Cache Settings</h3>
 				</div>
 				<div class="stormpath-container-body">
-					<p>When you initially set up Stormpath, it is recommended that you sync users from WordPress over to Stormpath.  This will allow your users to log into your site.  However, due to the way that WordPress stores their passwords, we are not able to import them into Stormpath. This means that you will have to require your users to reset their passwords after the sync is complete.</p>
-					<button>Sync Users Now</button>
+					<form class="form-horizontal" id="stormpath-cache-settings">
 
-					<p>You can set syncing on the WordPress cron job.  This will make sure all data is the same for your user data is the same from Stormpath inside of your WordPress install and any new users created in WordPress are in Stormpath.  Typically you will want to keep this enabled.</p>
-					<span class="stormpath-enable-toggle">
-					<?php $checked = get_option( 'stormpath_id_site', true ) ? 'checked' : ''; ?>
-					<input type="checkbox" <?php esc_html_e( $checked ); ?> data-toggle="toggle" class="stormpath-option-toggle enable-user-sync" data-on="Enabled" data-off="Disabled"">
-					</span>
+						<?php settings_fields( 'stormpath-id-site-settings' ); ?>
+						<?php do_settings_sections( 'stormpath-id-site-settings' ); ?>
 
+						<div class="form-group">
+							<label for="stormpath_cache_driver" class="col-sm-3 control-label">Cache Driver</label>
+							<div class="col-sm-9">
+								<?php $drivers = [ 'Null', 'Array', 'Memcached', 'Redis' ]; ?>
+								<select class="form-control" name="stormpath_cache_driver" id="stormpath_cache_driver">
+								<option value="">Select Cache Driver</option>
+									<?php foreach ( $drivers as $driver ) : ?>
+										<?php $selected = $driver == get_option(
+											'stormpath_cache_driver' ); ?>
+										<option
+											value="<?php esc_html_e( $driver ); ?>"
+											<?php if ( $selected ) : ?> selected="selected" <?php endif; ?>
+										>
+											<?php esc_html_e( $driver ); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+
+							</div>
+						</div>
+
+						<div class="form-group" id="stormpath_cache_driver_memcached_settings" <?php echo 'Memcached'
+						!=
+						get_option( 'stormpath_cache_driver' ) ? 'style="display:none;"' : '' ?> >
+							<div class="row">
+								<label class="col-sm-3 control-label">Memcached Info</label>
+							</div>
+							<div class="row">
+								<label class="col-sm-4 control-label">Host</label>
+								<div class="col-sm-8">
+									<input
+										type="text"
+										class="form-control"
+										id="stormpath_memcached_host"
+										name="stormpath_memcached_host"
+									    value="<?php echo get_option( 'stormpath_memcached_host' ); ?>"
+									>
+								</div>
+							</div>
+							<div class="row">
+								<label for="stormpath_id_site_domain_name" class="col-sm-4
+								control-label">Port</label>
+								<div class="col-sm-8">
+									<input
+										type="text"
+										class="form-control"
+										id="stormpath_memcached_port"
+										name="stormpath_memcached_port"
+									    value="<?php echo get_option( 'stormpath_memcached_port' ); ?>"
+									>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="form-group" id="stormpath_cache_driver_redis_settings" <?php echo 'Redis'
+						!=
+						get_option( 'stormpath_cache_driver' ) ? 'style="display:none;"' : '' ?>>
+							<div class="row">
+								<label class="col-sm-3 control-label">Redis Info</label>
+							</div>
+							<div class="row">
+								<label class="col-sm-4 control-label">Host</label>
+								<div class="col-sm-8">
+									<input
+										type="text"
+										class="form-control"
+										id="stormpath_redis_host"
+										name="stormpath_redis_host"
+									    value="<?php echo get_option( 'stormpath_redis_host' ); ?>"
+									>
+								</div>
+							</div>
+							<div class="row">
+								<label for="stormpath_id_site_domain_name" class="col-sm-4
+								control-label">Password</label>
+								<div class="col-sm-8">
+									<input
+										type="password"
+										class="form-control"
+										id="stormpath_redis_password"
+										name="stormpath_redis_password"
+									    value="<?php echo get_option( 'stormpath_redis_password' ); ?>"
+									>
+								</div>
+							</div>
+						</div>
+
+
+						<?php submit_button( 'Update Cache Settings', 'button-stormpath', 'submit', true, [ 'id' =>
+							'update-stormpath-cache-settings' ] ); ?>
+						<div class="stormpath-error-text"></div>
+					</form>
+					<span class="dashicons dashicons-yes stormpath-updated"></span>
+					<span class="dashicons dashicons-no stormpath-error"></span>
 				</div>
 			</div>
 		</div>
