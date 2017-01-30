@@ -57,6 +57,7 @@
 	</rule>
 
 	<rule ref="WordPress-VIP">
+		<exclude name="Generic.Files.LowercasedFilename"/>
 		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
 	</rule>
 	<rule ref="WordPress-Docs" />

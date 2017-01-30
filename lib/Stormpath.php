@@ -110,7 +110,7 @@ class Stormpath {
 		add_action( 'user_register', [ new UserManager(), 'user_registered' ], 10, 1 );
 		add_action( 'profile_update', [ new UserManager(), 'profile_update' ], 10, 2 );
 		add_action( 'after_password_reset', [ new UserManager(), 'password_changed' ], 10, 2 );
-		add_filter( 'authenticate', [ new UserManager(), 'authenticate' ], 10, 3 );
+		add_filter( 'authenticate', [ new LoginManager(), 'authenticate' ], 10, 3 );
 
 	}
 

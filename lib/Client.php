@@ -112,7 +112,6 @@ class Client {
 
 		$client = $clientBuilder->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
 			->build();
-
 		return $client;
 	}
 
