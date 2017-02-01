@@ -143,7 +143,9 @@ class UserManager {
 		$client = Client::get_instance( ApiKeys::get_instance() )->get_client();
 
 		$accountObj = $client->getDataStore()->instantiate( Account::class, $account );
-		$application->createAccount( $accountObj );
+		$account = $application->createAccount( $accountObj );
+
+		do_action( 'stormpath_user_registered', $account, $user );
 	}
 
 
