@@ -73,7 +73,6 @@ class LoginManager {
 	 */
 	public function redirect_to_id_site() {
 		$application = Application::get_instance();
-
 		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
 		wp_safe_redirect( $application->get_application()->createIdSiteUrl( [
 			'callbackUri' => get_site_url() . "/{$callback_path}",

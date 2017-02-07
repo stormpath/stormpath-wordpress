@@ -95,6 +95,7 @@ class Stormpath {
 		register_deactivation_hook( STORMPATH_BASEFILE, [ PluginManager::class, 'deactivate' ] );
 		register_uninstall_hook( STORMPATH_BASEFILE, [ PluginManager::class, 'uninstall' ] );
 
+		add_filter( 'allowed_redirect_hosts' , [ $this, 'stormpath_allowed_redirect_hosts' ] , 10 );
 		add_filter( 'plugin_action_links_' . plugin_basename( STORMPATH_BASEFILE ), [ PluginManager::class, 'add_action_links' ] );
 		add_filter( 'template_include', [ IdSiteManager::class, 'add_id_site_callback' ] );
 
@@ -195,5 +196,25 @@ class Stormpath {
 		register_setting( 'stormpath-settings', 'stormpath_client_apikey_secret' );
 		register_setting( 'stormpath-settings', 'stormpath_application' );
 		register_setting( 'stormpath-settings', 'stormpath_powered_by' );
+	}
+
+
+	/**
+	 * Add more redirect hosts.
+	 *
+	 * @param array $safe_redirects the array of safe redirect urls.
+	 * @return array
+	 */
+	public static function stormpath_allowed_redirect_hosts( $safe_redirects ) {
+
+		$base_url = defined( 'STORMPATH_BASE_URL' ) ? STORMPATH_BASE_URL : STORMPATH_DEFAULT_BASE_URL;
+
+		$parts = wp_parse_url( $base_url );
+
+		if ( key_exists( 'host', $parts ) ) {
+			$safe_redirects[] = $parts['host'];
+		}
+
+		return $safe_redirects;
 	}
 }

@@ -57,7 +57,6 @@ class IdSiteManager {
 	 */
 	public static function add_id_site_callback( $template ) {
 		global $wp;
-		global $wp_query;
 
 		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
 

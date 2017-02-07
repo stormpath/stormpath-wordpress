@@ -91,6 +91,8 @@ class Client {
 
 		$clientBuilder = new ClientBuilder();
 
+		$base_url = defined( 'STORMPATH_BASE_URL' ) ? STORMPATH_BASE_URL : STORMPATH_DEFAULT_BASE_URL;
+
 		if ( ! ! get_option( 'stormpath_cache_driver' ) ) {
 			$clientBuilder->setCacheManagerOptions( [
 				'cachemanager' => get_option( 'stormpath_cache_driver' ),
@@ -110,7 +112,9 @@ class Client {
 
 		}
 
-		$client = $clientBuilder->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
+		$client = $clientBuilder
+			->setBaseUrl( $base_url )
+			->setApiKeyProperties( "apiKey.id={$id}\napiKey.secret={$secret}" )
 			->build();
 		return $client;
 	}
