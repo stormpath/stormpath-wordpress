@@ -1,0 +1,126 @@
+/*
+ * Stormpath WordPress is a WordPress plugin to authenticate against a Stormpath Directory.
+ * Copyright (C) 2016  Stormpath
+ *
+ * This file is part of Stormpath WordPress.
+ *
+ * Stormpath WordPress is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Stormpath WordPress is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package Stormpath\WordPress;
+ */
+
+.stormpath-settings-wrap {
+	margin: 10px 20px 0 2px;
+}
+
+.stormpath-container {
+	min-height:20px;
+	border-radius: 5px;
+	background-color: #FFFFFF;
+	box-shadow: 0 2px 0 #EAEAEA;
+	padding: 30px;
+	margin: 0 0 30px;
+}
+
+.stormpath-header-logo {
+	max-width: 200px;
+	opacity: 0.9;
+	margin-bottom:20px;
+}
+
+.stormpath-container .stormpath-container-header {
+	height: 60px;
+	padding: 0 30px;
+	border-bottom: 1px solid #EAEAEA;
+	margin: -30px -30px 30px -30px;
+}
+
+.stormpath-container-header h3 {
+	font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+	font-size: 18px;
+	font-weight: 700;
+	color: #393939;
+	line-height: 60px;
+	margin: 0;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.stormpath-container-header .stormpath-enable-toggle {
+	position: absolute;
+	right: 35px;
+	top: 12px;
+}
+
+.wp-core-ui .button-stormpath,
+.wp-core-ui .button-stormpath:focus,
+.stormpath-enable-toggle .btn-primary,
+.stormpath-enable-toggle .btn-primary:focus{
+	background: #0044b2;
+	border-color: #003180 #001f4c #001f4c;
+	color: #fff;
+	-webkit-box-shadow: 0 1px 0 #001f4c;
+	box-shadow: 0 1px 0 #001f4c;
+	text-shadow: 0 -1px 1px #001f4c,1px 0 1px #001f4c,0 1px 1px #001f4c,-1px 0 1px #001f4c;
+}
+
+.wp-core-ui .button-stormpath:hover,
+.wp-core-ui .button-stormpath:visited,
+.stormpath-enable-toggle .btn-primary:hover,
+.stormpath-enable-toggle .btn-primary:visited{
+	background: #003180;
+	border-color: #001f4c;
+	color: #fff;
+	-webkit-box-shadow: 0 1px 0 #001f4c;
+	box-shadow: 0 1px 0 #001f4c;
+}
+
+.stormpath-inline-label {
+	color: #555555;
+	font-size: 15px;
+	font-family: "Roboto", sans-serif;
+	width: 85%;
+}
+
+.stormpath-label-description {
+	margin-top: 10px;
+	display: block;
+}
+
+
+.stormpath-updated {
+	font-size: 200px;
+	color: rgba(0, 180 ,0, 0.8);
+	position: absolute;
+	top: 35%;
+	left: 45%;
+	display:none;
+}
+
+.stormpath-error {
+	font-size: 200px;
+	color: rgba(180, 0 ,0, 0.8);
+	position: absolute;
+	top: 35%;
+	left: 45%;
+	display:none;
+}
+
+.stormpath-error-text {
+	font-size: 20px;
+	color: rgba(180, 0 ,0, 0.8);
+}
+

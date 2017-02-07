@@ -10,7 +10,7 @@
 
 	<exclude-pattern>*/tests/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/images/*</exclude-pattern>
+	<exclude-pattern>*/assets/*</exclude-pattern>
 
 	<!-- Commenting Sniffs -->
 
@@ -56,8 +56,33 @@
 		<severity>0</severity>
 	</rule>
 
+	<rule ref="WordPress.NamingConventions.ValidFunctionName">
+		<exclude-pattern>*/AjaxCalls.php</exclude-pattern>
+		<exclude-pattern>*/ApiKeys.php</exclude-pattern>
+		<exclude-pattern>*/Client.php</exclude-pattern>
+		<exclude-pattern>*/UserManager.php</exclude-pattern>
+		<exclude-pattern>*/PluginManager.php</exclude-pattern>
+		<exclude-pattern>*/LoginManager.php</exclude-pattern>
+		<exclude-pattern>*/IdSiteManager.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.ValidVariableName">
+		<exclude-pattern>*/AjaxCalls.php</exclude-pattern>
+		<exclude-pattern>*/ApiKeys.php</exclude-pattern>
+		<exclude-pattern>*/Client.php</exclude-pattern>
+		<exclude-pattern>*/UserManager.php</exclude-pattern>
+		<exclude-pattern>*/PluginManager.php</exclude-pattern>
+		<exclude-pattern>*/LoginManager.php</exclude-pattern>
+		<exclude-pattern>*/IdSiteManager.php</exclude-pattern>
+	</rule>
+
 	<rule ref="WordPress-VIP">
+		<exclude name="Generic.Files.LowercasedFilename"/>
 		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
 	</rule>
+
+
+
+
 	<rule ref="WordPress-Docs" />
 </ruleset>

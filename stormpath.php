@@ -2,8 +2,13 @@
 /**
  * Plugin Name: Stormpath
  * Plugin URI: https://stormpath.com
+<<<<<<< HEAD
  * Description: Use Stormpath for your authentication
  * Version: 0.1.6
+=======
+ * Description: Use Stormpath for your authentication.
+ * Version: 1.0.0-develop
+>>>>>>> v1-develop
  * Author: Stormpath
  * Author URI: https://stormpath.com
  * Text Domain: stormpath-wordpress
@@ -14,23 +19,28 @@
 
 namespace Stormpath\WordPress;
 
-define( 'STORMPATH_INTEGRATION',    'stormpath-wordpress' );
-define( 'STORMPATH_VERSION',        '0.1.6' );
-
-require_once dirname( __FILE__ ) . '/vendor/autoload.php';
-require_once dirname( __FILE__ ) . '/includes/bootstrap.php';
-require_once dirname( __FILE__ ) . '/includes/stormpath.php';
-require_once dirname( __FILE__ ) . '/includes/settings.php';
-
-/**
- * Bootstrap the plugin
- *
- * @return void
- */
-function init() {
-	new Stormpath;
-
-	load_plugin_textdomain( 'stormpath', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+if ( ! defined( 'ABSPATH' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	exit();
 }
 
-add_action( 'init', __NAMESPACE__ . '\init' );
+define( 'STORMPATH_INTEGRATION',        'stormpath-wordpress' );
+define( 'STORMPATH_VERSION',            '1.0.0-beta.1' );
+define( 'STORMPATH_MIN_WP_VERSION',     '4.5.0' );
+define( 'STORMPATH_MIN_PHP_VERSION',    '5.6.0' );
+define( 'STORMPATH_BASEPATH',           dirname( __FILE__ ) );
+define( 'STORMPATH_BASEFILE',           __FILE__ );
+define( 'STORMPATH_PLUGIN_ROOT_URL',    plugin_dir_url( __FILE__ ) );
+define( 'STORMPATH_DEFAULT_BASE_URL',   'https://api.stormpath.com/v1' );
+
+require __DIR__ . '/vendor/autoload.php';
+
+$stormpath = Stormpath::get_instance();
+
+do_action( 'stormpath_pre_run', [ $stormpath ] );
+
+$stormpath->run();
+
+do_action( 'stormpath_post_run', [ $stormpath ] );
+
