@@ -29,7 +29,7 @@ define( 'STORMPATH_MIN_PHP_VERSION',    '5.6.0' );
 define( 'STORMPATH_BASEPATH',           dirname( __FILE__ ) );
 define( 'STORMPATH_BASEFILE',           __FILE__ );
 define( 'STORMPATH_PLUGIN_ROOT_URL',    plugin_dir_url( __FILE__ ) );
-define( 'STORMPATH_DEFAULT_BASE_URL',   'https://api.stormpath.com' );
+define( 'STORMPATH_DEFAULT_BASE_URL',   'https://api.stormpath.com/v1' );
 
 require __DIR__ . '/vendor/autoload.php';
 
