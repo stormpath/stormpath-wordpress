@@ -57,8 +57,11 @@ class IdSiteManager {
 	 */
 	public static function add_id_site_callback( $template ) {
 		global $wp;
+		global $wp_query;
 
-		if ( $wp->request === 'stormpath/callback' && strpos( $template, '404' ) ) {
+		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
+
+		if ( $wp->request === $callback_path ) {
 
 			$manager = new self;
 			if ( ! isset( $_SERVER['REQUEST_URI'] ) ) {
@@ -83,7 +86,7 @@ class IdSiteManager {
 				wp_die( esc_html( $e->getMessage() ) );
 			}
 
-			wp_redirect( '/wp-admin' );
+			wp_safe_redirect( admin_url() );
 			exit;
 		}
 
@@ -104,7 +107,7 @@ class IdSiteManager {
 			)) );
 		}
 
-		wp_redirect( '/' );
+		wp_safe_redirect( home_url() );
 		exit;
 	}
 

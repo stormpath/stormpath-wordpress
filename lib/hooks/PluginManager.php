@@ -94,7 +94,7 @@ class PluginManager {
 	public static function plugin_activated() {
 		flush_rewrite_rules();
 
-		wp_redirect( admin_url( '/users.php?page=stormpath&install=1' ) );
+		wp_safe_redirect( admin_url( '/users.php?page=stormpath&install=1' ) );
 		exit();
 
 	}

@@ -103,7 +103,7 @@ class UserManager {
 
 		try {
 			$application = Application::get_instance()->get_application();
-			$account = $application->getAccounts( [ 'email' => urlencode( $email ) ] );
+			$account = $application->getAccounts( [ 'email' => rawurlencode( $email ) ] );
 
 			if ( 0 !== $account->getSize() ) {
 				$account = $account->getIterator()->current();
@@ -111,7 +111,8 @@ class UserManager {
 
 			}
 		} catch ( ResourceError $re ) {
-			wp_die( esc_html__( $re->getMessage() ) );
+			$message = $re->getMessage();
+			wp_die( wp_kses( $message ) );
 		}
 
 	}
@@ -207,7 +208,7 @@ class UserManager {
 	 */
 	public function password_changed( $user, $password ) {
 		$application = Application::get_instance()->get_application();
-		$accounts = $application->accounts->setSearch( [ 'q' => urlencode( $user->user_email ) ] );
+		$accounts = $application->accounts->setSearch( [ 'q' => rawurlencode( $user->user_email ) ] );
 		if ( $accounts->size > 0 ) {
 			$account = $accounts->getIterator()->current();
 			$account->password = $password;

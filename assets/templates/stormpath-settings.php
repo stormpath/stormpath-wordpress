@@ -248,7 +248,9 @@
 								name="stormpath_id_site_authorized_redirect_urls"
 							></textarea>
 								<span id="helpBlock" class="help-block">A list of URLs that the user can be sent to after they login or register at the ID Site. One URL per line.</span>
-								<span id="helpBlock" class="help-block">Please make sure <?php echo( get_site_url() . '/stormpath/callback' ); ?> is added here, otherwise ID Site will not work.</span>
+								<?php $callback_path = apply_filters('stormpath_callback_path', 'stormpath/callback')
+								; ?>
+								<span id="helpBlock" class="help-block">Please make sure <?php echo( get_site_url() . "/{$callback_path}" ); ?> is added here, otherwise ID Site will not work.</span>
 							</div>
 						</div>
 

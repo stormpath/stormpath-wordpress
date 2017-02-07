@@ -74,7 +74,10 @@ class LoginManager {
 	public function redirect_to_id_site() {
 		$application = Application::get_instance();
 
-		wp_redirect( $application->get_application()->createIdSiteUrl( [ 'callbackUri' => get_site_url() . '/stormpath/callback' ] ) );
+		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
+		wp_safe_redirect( $application->get_application()->createIdSiteUrl( [
+			'callbackUri' => get_site_url() . "/{$callback_path}",
+		] ) );
 		exit;
 	}
 
@@ -88,12 +91,13 @@ class LoginManager {
 
 		if ( $this->useIdSite ) {
 			$application = Application::get_instance();
-			$properties = [ 'callbackUri' => get_site_url() . '/stormpath/callback', 'logout' => true ];
+			$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
+			$properties = [ 'callbackUri' => get_site_url() . "/{$callback_path}", 'logout' => true ];
 
 			if ( null !== $state ) {
 				$properties['state'] = $state;
 			}
-			wp_redirect( $application->get_application()->createIdSiteUrl( $properties ) );
+			wp_safe_redirect( $application->get_application()->createIdSiteUrl( $properties ) );
 			exit;
 		}
 	}
