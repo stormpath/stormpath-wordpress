@@ -136,4 +136,17 @@ class IdSiteManager {
 		return;
 
 	}
+
+	/**
+	 * Register the WordPress user that just logged in via Stormpath ID Site.
+	 *
+	 * Since the register and authenticate are basically the same, lets just use
+	 * the authenticate method.
+	 *
+	 * @param \stdClass $response The response from ID Site.
+	 * @return void
+	 */
+	public static function register( $response ) {
+		self::authenticate( $response );
+	}
 }
