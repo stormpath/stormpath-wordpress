@@ -106,6 +106,8 @@ class IdSiteManager {
 			)) );
 		}
 
+		do_action( 'stormpath_callback_logout', $response );
+
 		wp_safe_redirect( home_url() );
 		exit;
 	}
@@ -133,6 +135,9 @@ class IdSiteManager {
 
 		wp_set_current_user( $user->ID, $user->user_login );
 		wp_set_auth_cookie( $user->ID );
+
+		do_action( 'stormpath_callback_authenticate', $response );
+
 		return;
 
 	}
