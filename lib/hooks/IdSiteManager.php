@@ -84,9 +84,6 @@ class IdSiteManager {
 			} catch ( \Exception $e ) {
 				wp_die( esc_html( $e->getMessage() ) );
 			}
-
-			wp_safe_redirect( admin_url() );
-			exit;
 		}
 
 		return $template;
@@ -108,7 +105,13 @@ class IdSiteManager {
 
 		do_action( 'stormpath_callback_logout', $response );
 
-		wp_safe_redirect( home_url() );
+		$redirect_to = '/wp-login.php?loggedout=true';
+
+		$user = get_user_by( 'email', $response->account->email );
+
+		$redirect_to = apply_filters( 'logout_redirect', $redirect_to, '', $user );
+
+		wp_safe_redirect( $redirect_to );
 		exit;
 	}
 
@@ -138,8 +141,9 @@ class IdSiteManager {
 
 		do_action( 'stormpath_callback_authenticate', $response );
 
-		return;
-
+		$redirect_to = apply_filters( 'login_redirect', admin_url(), '' , wp_get_current_user() );
+		wp_safe_redirect( $redirect_to );
+		exit;
 	}
 
 	/**
