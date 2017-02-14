@@ -250,7 +250,7 @@
 								<span id="helpBlock" class="help-block">A list of URLs that the user can be sent to after they login or register at the ID Site. One URL per line.</span>
 								<?php $callback_path = apply_filters('stormpath_callback_path', 'stormpath/callback')
 								; ?>
-								<span id="helpBlock" class="help-block">Please make sure <?php echo( get_site_url() . "/{$callback_path}" ); ?> is added here, otherwise ID Site will not work.</span>
+								<span id="helpBlock" class="help-block">Please make sure <?php echo( get_home_url() . "/{$callback_path}" ); ?> is added here, otherwise ID Site will not work.</span>
 							</div>
 						</div>
 
