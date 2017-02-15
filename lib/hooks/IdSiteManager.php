@@ -112,7 +112,7 @@ class IdSiteManager {
 
 		do_action( 'stormpath_callback_logout', $response );
 
-		$redirect_to = '/wp-login.php?loggedout=true';
+		$redirect_to = site_url( '/wp-login.php?loggedout=true' );
 
 		$user = get_user_by( 'email', $response->account->email );
 
