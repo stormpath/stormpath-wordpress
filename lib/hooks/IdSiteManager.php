@@ -56,19 +56,28 @@ class IdSiteManager {
 	 * @return mixed
 	 */
 	public static function add_id_site_callback( $template ) {
-		global $wp;
+
+		if ( ! isset( $_SERVER['REQUEST_URI'] ) ) {
+			return;
+		}
 
 		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
 
-		if ( $wp->request === $callback_path ) {
+		$request_uri = esc_url_raw( $_SERVER['REQUEST_URI'] );
+
+		// Remove any starting slashes
+		if ( substr( $request_uri, 0, 1 ) == '/' ) {
+			$request_uri_no_starting_slash = substr( $request_uri, 1 );
+		}
+
+		$path = substr( $request_uri_no_starting_slash, 0, strlen( $callback_path ) );
+
+		if ( $path === $callback_path ) {
 
 			$manager = new self;
-			if ( ! isset( $_SERVER['REQUEST_URI'] ) ) {
-				return $template;
-			}
 
 			try {
-				$response = $manager->application->handleIdSiteCallback( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+				$response = $manager->application->handleIdSiteCallback( $request_uri );
 
 				switch ( strtolower( $response->status ) ) {
 					case 'authenticated' :
@@ -85,8 +94,6 @@ class IdSiteManager {
 				wp_die( esc_html( $e->getMessage() ) );
 			}
 		}
-
-		return $template;
 	}
 
 	/**

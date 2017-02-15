@@ -97,7 +97,7 @@ class Stormpath {
 
 		add_filter( 'allowed_redirect_hosts' , [ $this, 'stormpath_allowed_redirect_hosts' ] , 10 );
 		add_filter( 'plugin_action_links_' . plugin_basename( STORMPATH_BASEFILE ), [ PluginManager::class, 'add_action_links' ] );
-		add_filter( 'template_include', [ IdSiteManager::class, 'add_id_site_callback' ] );
+		add_filter( 'init', [ IdSiteManager::class, 'add_id_site_callback' ] );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_resources' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menus' ) );
