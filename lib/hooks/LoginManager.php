@@ -75,7 +75,7 @@ class LoginManager {
 		$application = Application::get_instance();
 		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
 		wp_safe_redirect( $application->get_application()->createIdSiteUrl( [
-			'callbackUri' => get_site_url() . "/{$callback_path}",
+			'callbackUri' => get_home_url() . "/{$callback_path}",
 		] ) );
 		exit;
 	}
@@ -91,7 +91,7 @@ class LoginManager {
 		if ( $this->useIdSite ) {
 			$application = Application::get_instance();
 			$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
-			$properties = [ 'callbackUri' => get_site_url() . "/{$callback_path}", 'logout' => true ];
+			$properties = [ 'callbackUri' => get_home_url() . "/{$callback_path}", 'logout' => true ];
 
 			if ( null !== $state ) {
 				$properties['state'] = $state;
