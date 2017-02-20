@@ -56,19 +56,28 @@ class IdSiteManager {
 	 * @return mixed
 	 */
 	public static function add_id_site_callback( $template ) {
-		global $wp;
+
+		if ( ! isset( $_SERVER['REQUEST_URI'] ) ) {
+			return;
+		}
 
 		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
 
-		if ( $wp->request === $callback_path ) {
+		$request_uri = esc_url_raw( $_SERVER['REQUEST_URI'] );
+
+		// Remove any starting slashes
+		if ( substr( $request_uri, 0, 1 ) == '/' ) {
+			$request_uri_no_starting_slash = substr( $request_uri, 1 );
+		}
+
+		$path = substr( $request_uri_no_starting_slash, 0, strlen( $callback_path ) );
+
+		if ( $path === $callback_path ) {
 
 			$manager = new self;
-			if ( ! isset( $_SERVER['REQUEST_URI'] ) ) {
-				return $template;
-			}
 
 			try {
-				$response = $manager->application->handleIdSiteCallback( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+				$response = $manager->application->handleIdSiteCallback( $request_uri );
 
 				switch ( strtolower( $response->status ) ) {
 					case 'authenticated' :
@@ -84,12 +93,7 @@ class IdSiteManager {
 			} catch ( \Exception $e ) {
 				wp_die( esc_html( $e->getMessage() ) );
 			}
-
-			wp_safe_redirect( admin_url() );
-			exit;
 		}
-
-		return $template;
 	}
 
 	/**
@@ -106,7 +110,15 @@ class IdSiteManager {
 			)) );
 		}
 
-		wp_safe_redirect( home_url() );
+		do_action( 'stormpath_callback_logout', $response );
+
+		$redirect_to = site_url( '/wp-login.php?loggedout=true' );
+
+		$user = get_user_by( 'email', $response->account->email );
+
+		$redirect_to = apply_filters( 'logout_redirect', $redirect_to, '', $user );
+
+		wp_safe_redirect( $redirect_to );
 		exit;
 	}
 
@@ -133,8 +145,12 @@ class IdSiteManager {
 
 		wp_set_current_user( $user->ID, $user->user_login );
 		wp_set_auth_cookie( $user->ID );
-		return;
 
+		do_action( 'stormpath_callback_authenticate', $response );
+
+		$redirect_to = apply_filters( 'login_redirect', admin_url(), '' , wp_get_current_user() );
+		wp_safe_redirect( $redirect_to );
+		exit;
 	}
 
 	/**
