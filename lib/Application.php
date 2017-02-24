@@ -103,8 +103,9 @@ class Application {
 	public function get_application() {
 		if ( null === $this->application ) {
 			try {
+				$application_href = defined( 'STORMPATH_APPLICATION' ) ? STORMPATH_APPLICATION : get_option( 'stormpath_application' );
 				$this->application = $this->client->get_client()->getDataStore()->getResource(
-					get_option( 'stormpath_application' ),
+					$application_href,
 					\Stormpath\Stormpath::APPLICATION,
 					[]
 				);
