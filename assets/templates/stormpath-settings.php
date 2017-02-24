@@ -21,22 +21,23 @@
  *
  * @package Stormpath\WordPress;
  */
+
+$application_href = defined( 'STORMPATH_APPLICATION' ) ? STORMPATH_APPLICATION : get_option( 'stormpath_application' );
+
+if ( \Stormpath\WordPress\ApiKeys::get_instance()->api_keys_valid() && '' != $application_href ) {
+	update_option( 'stormpath_installed', true, false );
+} else {
+	update_option( 'stormpath_installed', false, false );
+}
+
+$nonce = wp_create_nonce( "stormpath-settings-nonce" );
+
 ?>
-<?php if ( \Stormpath\WordPress\ApiKeys::get_instance()->api_keys_valid() && '' != get_option( 'stormpath_application' ) ) : ?>
-	<?php update_option( 'stormpath_installed', true, false ); ?>
-<?php else: ?>
-	<?php update_option( 'stormpath_installed', false, false ); ?>
-<?php endif; ?>
-
-
-<?php $nonce = wp_create_nonce( "stormpath-settings-nonce" ); ?>
 <div class="stormpath-settings-wrap" id="stormpath-settings" data-nonce="<?php esc_html_e($nonce); ?>">
 
 	<section class="stormpath-page-header">
 		<img class="stormpath-header-logo" src="<?php esc_html_e( STORMPATH_PLUGIN_ROOT_URL . 'assets/images/logo.png' ); ?>" />
 	</section>
-
-
 
 	<div class="row">
 
@@ -47,16 +48,28 @@
 					<h3>Settings</h3>
 				</div>
 				<div class="stormpath-container-body">
-					<form method="POST" action="options.php" class="form-horizontal">
-						<?php settings_fields( 'stormpath-settings' ); ?>
-						<?php do_settings_sections( 'stormpath-settings' ); ?>
 
-						<?php include STORMPATH_BASEPATH .'/assets/templates/_partials/apiKey_form_fields.php'; ?>
+					<?php if ( defined( 'STORMPATH_CLIENT_APIKEY_ID' ) && defined( 'STORMPATH_CLIENT_APIKEY_SECRET' ) && defined( 'STORMPATH_APPLICATION' ) ) { ?>
 
-						<?php include STORMPATH_BASEPATH .'/assets/templates/_partials/application_selection.php'; ?>
+						<p>Stormpath settings have been defined in your WordPress configuration file/s.</p>
 
-						<?php submit_button( 'Update Settings', 'button-stormpath', 'submit', true, [ 'class' => 'stormpath-submit' ] ); ?>
-					</form>
+					<?php } else { ?>
+
+						<form method="POST" action="options.php" class="form-horizontal">
+
+							<?php settings_fields( 'stormpath-settings' ); ?>
+
+							<?php do_settings_sections( 'stormpath-settings' ); ?>
+
+							<?php include STORMPATH_BASEPATH .'/assets/templates/_partials/apiKey_form_fields.php'; ?>
+
+							<?php include STORMPATH_BASEPATH .'/assets/templates/_partials/application_selection.php'; ?>
+
+							<?php submit_button( 'Update Settings', 'button-stormpath', 'submit', true, [ 'class' => 'stormpath-submit' ] ); ?>
+
+						</form>
+
+					<?php } ?>
 
 				</div>
 			</div>

@@ -68,8 +68,8 @@ class ApiKeys {
 	 * ApiKeys constructor.
 	 */
 	protected function __construct() {
-		$this->apiKeyId = get_option( 'stormpath_client_apikey_id' );
-		$this->apiKeySecret = get_option( 'stormpath_client_apikey_secret' );
+		$this->apiKeyId = ( defined( 'STORMPATH_CLIENT_APIKEY_ID' ) ) ? STORMPATH_CLIENT_APIKEY_ID : get_option( 'stormpath_client_apikey_id' );
+		$this->apiKeySecret = ( defined( 'STORMPATH_CLIENT_APIKEY_SECRET' ) ) ? STORMPATH_CLIENT_APIKEY_SECRET : get_option( 'stormpath_client_apikey_secret' );
 	}
 
 	/**

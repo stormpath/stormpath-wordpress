@@ -63,7 +63,7 @@ class IdSiteManager {
 
 		$callback_path = apply_filters( 'stormpath_callback_path', 'stormpath/callback' );
 
-		$request_uri = esc_url_raw( $_SERVER['REQUEST_URI'] );
+		$request_uri = $request_uri_no_starting_slash = esc_url_raw( $_SERVER['REQUEST_URI'] );
 
 		// Remove any starting slashes
 		if ( substr( $request_uri, 0, 1 ) == '/' ) {
