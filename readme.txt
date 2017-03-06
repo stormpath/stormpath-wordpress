@@ -45,6 +45,10 @@ the raw ID and Secret.
 
 == Changelog ==
 
+= 1.0.0-beta.1 =
+* Full Re-write of plugin
+* See Documentation for details.
+
 = 0.1.6 =
 * Reporting for the plugin version to Stormpath updated.
 
@@ -68,6 +72,11 @@ the raw ID and Secret.
 * Initial Release
 
 == Upgrade Notice ==
+
+= 1.0.0-beta.1 =
+This plugin version is in beta.  Please do not use in production yet.
+For details, see documentation.
+Support and issues should be reported on github.
 
 = 0.1.6 =
 Update was made to the user agent so Stormpath knows the requests are coming from WordPress and which version of

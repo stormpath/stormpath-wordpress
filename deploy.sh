@@ -29,10 +29,7 @@ git clone -q $GH_REF $(basename $SVN_REPO)/git
 
 cd $(basename $SVN_REPO)/git
 
-if [ -e "bin/build.sh" ]; then
-	echo "Starting bin/build.sh."
-	bash bin/build.sh
-fi
+composer install --no-dev
 
 cd $BASE_DIR/$(basename $SVN_REPO)
 SVN_ROOT_DIR=$(pwd)
